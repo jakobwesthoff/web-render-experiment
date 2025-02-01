@@ -1,0 +1,21 @@
+FROM almalinux:9
+
+# Base image update
+RUN dnf update -y && \
+    dnf install -y epel-release
+
+# Install chromium
+RUN dnf install -y chromium-common chromium-headless
+ENV CHROMIUM_EXECUTABLE_PATH="/usr/lib64/chromium-browser/headless_shell"
+
+# Prepare /app
+RUN mkdir /app
+WORKDIR /app 
+
+# Install nvm/node
+COPY .nvmrc /app
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+RUN bash -l -c 'nvm install'
+
+EXPOSE 3000/tcp
+CMD ["/bin/bash"]
