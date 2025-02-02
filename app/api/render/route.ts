@@ -4,22 +4,22 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const { url, width, height, deviceScaleFactor } = await request.json();
 
-  const page = await browserPool.requirePage();
+  const page = await browserPool.acquire();
 
   let image: Uint8Array;
   try {
-    await page.setViewport({ width, height, deviceScaleFactor });
+    await page.value().setViewport({ width, height, deviceScaleFactor });
 
-    await page.goto(url);
-    await page.waitForNetworkIdle();
+    await page.value().goto(url);
+    await page.value().waitForNetworkIdle();
 
-    image = await page.screenshot({
+    image = await page.value().screenshot({
       type: "png",
       fullPage: false,
       encoding: "binary",
     });
   } finally {
-    await browserPool.releasePage(page);
+    page.release();
   }
 
   return new NextResponse(image, {
