@@ -70,19 +70,6 @@ class BrowserPool {
     this.ensureInitialized();
     return new InnerLock(this, await this.pages.acquire());
   }
-
-  // public async release(page: Page): Promise<void> {
-  //   const requiredIndex = this.requiredPages.indexOf(page);
-  //   if (requiredIndex === -1) {
-  //     throw new Error(`Unknown page was given for release.`);
-  //   }
-  //
-  //   this.requiredPages.splice(requiredIndex, 1);
-  //
-  //   await page.goto("about:blank");
-  //
-  //   this.releasedPages.push(page);
-  // }
 }
 
 export const browserPool = new BrowserPool();

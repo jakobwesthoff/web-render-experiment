@@ -30,7 +30,6 @@ export class MutexCollection<T> {
   public constructor() {}
 
   public add(item: T) {
-    console.log(`Added item, now in collection ${this.collection.length}`);
     this.collection.push(new Mutex(item));
     this[ProcessQueueSymbol]();
   }
@@ -44,11 +43,9 @@ export class MutexCollection<T> {
       (candidate) => !candidate.isAcquired(),
     );
     if (releasedItems.length === 0) {
-      console.log("Waiting for one getting available.");
       return false;
     }
 
-    console.log("One is available");
     return releasedItems[0];
   }
 
